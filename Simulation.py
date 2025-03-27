@@ -2,9 +2,10 @@ import tellurium as te
 import roadrunner
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+import os
 import time 
 
-tic = time.time()
 # Define the reaction network using Antimony string
 """
 The species of the gillespie algorithm are defined as P(number of arms
@@ -57,11 +58,20 @@ ending_n = 400
 Species = model.getFloatingSpeciesIds() #get list with species = ["P", "R", ...]
 initial_conditions = {species: model[species] for species in Species} # Get initial conditions of the model = values of the species
 
+Results = pd.DataFrame(columns=["P", "R", "P1", "P2", "P3", "P4", "P5", "P6"]) #Create empty df with column shits
 
-def run_sim(NR):
-    #reset all model parameters
+# Create the "figures" directory if it doesn't exist
+os.makedirs("figures", exist_ok=True)
+
+###
+#### Define Simulation Function
+###
+
+def run_sim(model, NR, db):
+
+    #Set all model parameters
     for i in Species:
-        model.i = initial_conditions[i]
+        model.i = initial_conditions[i] #reset all parameters to initial conditions
     model.R = NR # set the number of receptors to NR
 
     # Run a stochastic simulation using Gillespie's algorithm
@@ -71,18 +81,32 @@ def run_sim(NR):
     averages = {species: np.round(np.mean(result[-ending_n:, i+1]), 2) for i, species in enumerate(Species)}
     print(f"Averages of the last {ending_n} values for each species: {averages}")
 
+    #Store the values in the database (db)
+    db.loc[len(db)] = averages
+
     # Plot results
     for i in range(len(Species)):
         plt.plot(result[:, 0], result[:, i+1], label=Species[i])
 
 
-final_conditions = {species: model[species] for species in Species} #Get final conditions of the model
+###
+#### Run simulation for all NRs wanted
+###
 
 
+receptor_array = np.logspace(np.log10(100), np.log10(100000), num=100) #make array with all number of receptors we need to check
+
+for i in receptor_array:
+    run_sim(model, i, Results)
+    final_conditions = {species: model[species] for species in Species} #Get final conditions of the model
+    plt.title(f'Gillespie Simulation\nNR = {i}', size=10)
+    plt.xlabel('Time')
+    plt.ylabel('Molecule Count')
+    plt.legend()
+    plt.savefig(f"figures/Simulation_NR_{i}.pdf", dpi=300, bbox_inches="tight")
+    #plt.show()
+    plt.clf()
+
+print(Results.head(5))
 
 
-plt.title(f'Gillespie Simulation\n{averages}', size=10)
-plt.xlabel('Time')
-plt.ylabel('Molecule Count')
-plt.legend()
-plt.show()
