@@ -33,7 +33,7 @@ P5 -> P4 + R; k_off * P5
 P5 + R -> P6; k_on_surf * P5 * R;
 P6 -> P5 + R; k_off * P6
 // Initial conditions
-P = 100;
+P = 17000;
 R = 100;
 P1 = 0;
 P2 = 0;
@@ -93,7 +93,7 @@ def run_sim(model, NR, db):
 ###
 
 
-receptor_array = np.logspace(np.log10(100), np.log10(100000), num=100) #make array with all number of receptors we need to check
+receptor_array = np.logspace(np.log10(100), np.log10(100000), num=10) #make array with all number of receptors we need to check
 
 for i in receptor_array:
     run_sim(model, i, Results)  #run simulation with NR
@@ -105,6 +105,6 @@ for i in receptor_array:
     #plt.show()
     plt.clf()   # clear the plotting for the next figure
 
-print(Results.head(5))  #print the first 5 entries
+print(Results)  #print the table 
 
 
