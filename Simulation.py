@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
-import time 
 
 # Define the reaction network using Antimony string
 """
