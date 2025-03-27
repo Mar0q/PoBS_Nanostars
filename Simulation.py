@@ -97,6 +97,9 @@ receptor_array = np.logspace(np.log10(100), np.log10(100000), num=10) #make arra
 
 for i in receptor_array:
     run_sim(model, i, Results)  #run simulation with NR
+    final_conditions = {species: model[species] for species in Species} # Get final conditions of the model = values of the species
+    print(f"final conditions = {final_conditions}")
+
     plt.title(f'Gillespie Simulation\nNR = {i}', size=10)
     plt.xlabel('Time')
     plt.ylabel('Molecule Count')
