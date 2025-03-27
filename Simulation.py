@@ -105,6 +105,8 @@ for i in receptor_array:
     #plt.show()
     plt.clf()   # clear the plotting for the next figure
 
+
+Results.to_csv("figures/simulation_results.csv", sep = ";", index=False)    #save results as a csv file
 print(Results)  #print the table 
 
 
