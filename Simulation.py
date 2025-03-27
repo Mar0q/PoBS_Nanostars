@@ -97,8 +97,7 @@ def run_sim(model, NR, db):
 receptor_array = np.logspace(np.log10(100), np.log10(100000), num=100) #make array with all number of receptors we need to check
 
 for i in receptor_array:
-    run_sim(model, i, Results)
-    final_conditions = {species: model[species] for species in Species} #Get final conditions of the model
+    run_sim(model, i, Results)  #run simulation with NR
     plt.title(f'Gillespie Simulation\nNR = {i}', size=10)
     plt.xlabel('Time')
     plt.ylabel('Molecule Count')
