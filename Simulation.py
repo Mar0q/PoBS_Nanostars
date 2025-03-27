@@ -103,10 +103,10 @@ for i in receptor_array:
     plt.xlabel('Time')
     plt.ylabel('Molecule Count')
     plt.legend()
-    plt.savefig(f"figures/Simulation_NR_{i}.pdf", dpi=300, bbox_inches="tight")
+    plt.savefig(f"figures/Simulation_NR_{i}.pdf", dpi=300, bbox_inches="tight") #store the plot in the figures folder
     #plt.show()
-    plt.clf()
+    plt.clf()   # clear the plotting for the next figure
 
-print(Results.head(5))
+print(Results.head(5))  #print the first 5 entries
 
 
