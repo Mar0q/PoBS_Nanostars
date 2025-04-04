@@ -18,7 +18,7 @@ species P, R, P1, P2, P3, P4, P5, P6;
 // Parameters
 k_on_sol = 0.00000001;
 k_off = 1;
-k_on_surf = 100000000000000;
+k_on_surf = 0.01;
 // Reactions
 P + R -> P1; k_on_sol * P * R;
 P1 -> P + R; k_off * P1;
@@ -85,18 +85,13 @@ def run_sim(model, NR, db):
     # Calculate the average of the last ending_n values for each species
     averages = {species: np.round(np.mean(result[-ending_n:, i+1]), 2) for i, species in enumerate(Species)}
     #print(f"Averages of the last {ending_n} values for each species: {averages}")
-    print(result[:10,2])
-    print(result[10:100,3])
-    print(result[100:200,4])
-    print(result[200:300,5])
-    print(result[300:400,6])
-    print(result[400:500,7])
+
     #Store the values in the database (db)
     db.loc[len(db)] = averages
 
     # Plot results
     for i in range(len(Species)):
-        plt.plot(result[:500, 0], result[:, i+1], label=Species[i])
+        plt.plot(result[:, 0], result[:, i+1], label=Species[i])
     
 
 
@@ -109,7 +104,6 @@ receptor_array = np.round(np.logspace(np.log10(100), np.log10(100000), num=10)) 
 
 for num,i in enumerate(receptor_array):
     run_sim(model, i, Results)  #run simulation with NR
-    #final_conditions = {species: model[species] for species in Species} # Get final conditions of the model = values of the species
     print(num)
 
     plt.title(f'zOOME Gillespie Simulation\nNR = {i}', size=10)
