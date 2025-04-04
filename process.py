@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 results = pd.read_csv("figures\simulation_results.csv", delimiter = ";")
 
 
-results["Coverage"] = (17000-results["P"]) / 17000
+results["Coverage"] = (170000-results["P"]) / 170000
 
 print(results)
 

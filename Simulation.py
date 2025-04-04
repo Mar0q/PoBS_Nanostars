@@ -33,7 +33,7 @@ P5 -> P4 + R; k_off * P5
 P5 + R -> P6; k_on_surf * P5 * R;
 P6 -> P5 + R; k_off * P6
 // Initial conditions
-P = 17000;
+P = 170000;
 R = 100;
 P1 = 0;
 P2 = 0;
@@ -55,7 +55,6 @@ ending_n = 400
 ###
 
 Species = model.getFloatingSpeciesIds() #get list with species = ["P", "R", ...]
-initial_conditions = {species: model[species] for species in Species} # Get initial conditions of the model = values of the species
 
 Results = pd.DataFrame(columns=["P", "R", "P1", "P2", "P3", "P4", "P5", "P6"]) #Create empty df with column shits
 
@@ -70,7 +69,7 @@ def run_sim(model, NR, db):
 
     
     model.R = NR # set the number of receptors to NR
-    model.P = 17000
+    model.P = 170000
     model.P1 = 0
     model.P2 = 0
     model.P3 = 0
@@ -100,13 +99,13 @@ def run_sim(model, NR, db):
 #### Run simulation for all NRs wanted
 ###
 
-receptor_array = np.round(np.logspace(np.log10(100), np.log10(100000), num=10)) #make array with all number of receptors we need to check
+receptor_array = np.round(np.logspace(np.log10(100), np.log10(1000000), num=50)) #make array with all number of receptors we need to check
 
 for num,i in enumerate(receptor_array):
     run_sim(model, i, Results)  #run simulation with NR
     print(num)
 
-    plt.title(f'zOOME Gillespie Simulation\nNR = {i}', size=10)
+    plt.title(f'Gillespie Simulation\nNR = {i}', size=10)
     plt.xlabel('Time')
     plt.ylabel('Molecule Count')
     plt.legend()
