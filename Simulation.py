@@ -85,13 +85,20 @@ def run_sim(model, NR, db):
     # Calculate the average of the last ending_n values for each species
     averages = {species: np.round(np.mean(result[-ending_n:, i+1]), 2) for i, species in enumerate(Species)}
     #print(f"Averages of the last {ending_n} values for each species: {averages}")
-
+    print(result[:10,2])
+    print(result[10:100,3])
+    print(result[100:200,4])
+    print(result[200:300,5])
+    print(result[300:400,6])
+    print(result[400:500,7])
     #Store the values in the database (db)
     db.loc[len(db)] = averages
 
     # Plot results
     for i in range(len(Species)):
-        plt.plot(result[:, 0], result[:, i+1], label=Species[i])
+        plt.plot(result[:500, 0], result[:, i+1], label=Species[i])
+    
+
 
 
 ###
@@ -105,7 +112,7 @@ for num,i in enumerate(receptor_array):
     #final_conditions = {species: model[species] for species in Species} # Get final conditions of the model = values of the species
     print(num)
 
-    plt.title(f'Gillespie Simulation\nNR = {i}', size=10)
+    plt.title(f'zOOME Gillespie Simulation\nNR = {i}', size=10)
     plt.xlabel('Time')
     plt.ylabel('Molecule Count')
     plt.legend()
