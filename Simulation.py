@@ -16,9 +16,9 @@ model = te.loada('''
 // Species
 species P, R, P1, P2, P3, P4, P5, P6;
 // Parameters
-k_on_sol = 5;
-k_off = 0.3;
-k_on_surf = 1;
+k_on_sol = 0.00000001;
+k_off = 1;
+k_on_surf = 100000000000000;
 // Reactions
 P + R -> P1; k_on_sol * P * R;
 P1 -> P + R; k_off * P1;
@@ -68,17 +68,23 @@ os.makedirs("figures", exist_ok=True)
 
 def run_sim(model, NR, db):
 
-    #Set all model parameters
-    for i in Species:
-        model.i = initial_conditions[i] #reset all parameters to initial conditions
+    
     model.R = NR # set the number of receptors to NR
+    model.P = 17000
+    model.P1 = 0
+    model.P2 = 0
+    model.P3 = 0
+    model.P4 = 0
+    model.P5 = 0
+    model.P6 = 0
+
 
     # Run a stochastic simulation using Gillespie's algorithm
     result = model.gillespie(0, 1000, 500) # run sim (start_time, end_time, steps)
 
     # Calculate the average of the last ending_n values for each species
     averages = {species: np.round(np.mean(result[-ending_n:, i+1]), 2) for i, species in enumerate(Species)}
-    print(f"Averages of the last {ending_n} values for each species: {averages}")
+    #print(f"Averages of the last {ending_n} values for each species: {averages}")
 
     #Store the values in the database (db)
     db.loc[len(db)] = averages
@@ -92,13 +98,12 @@ def run_sim(model, NR, db):
 #### Run simulation for all NRs wanted
 ###
 
+receptor_array = np.round(np.logspace(np.log10(100), np.log10(100000), num=10)) #make array with all number of receptors we need to check
 
-receptor_array = np.logspace(np.log10(100), np.log10(100000), num=10) #make array with all number of receptors we need to check
-
-for i in receptor_array:
+for num,i in enumerate(receptor_array):
     run_sim(model, i, Results)  #run simulation with NR
-    final_conditions = {species: model[species] for species in Species} # Get final conditions of the model = values of the species
-    print(f"final conditions = {final_conditions}")
+    #final_conditions = {species: model[species] for species in Species} # Get final conditions of the model = values of the species
+    print(num)
 
     plt.title(f'Gillespie Simulation\nNR = {i}', size=10)
     plt.xlabel('Time')
